@@ -1,0 +1,7 @@
+Name,Source,Column 1,Column 2,Add Col 1,Mult Col 2,Add Col 2,Column 3,Column 4
+Name_in1,NAME_bc_data.csv,Time,Name_in1,,,,,
+Name_in2,NAME_bc_data.csv,Time,Name_in2,,,,,
+Name_in3,NAME_bc_data.csv,Time,Name_in3,,,,,
+Name_out1,NAME_bc_data.csv,Time,Name_out1,,,,,
+Name_out2,NAME_bc_data.csv,Time,Name_out2,,,,,
+Name_out3,NAME_bc_data.csv,Time,Name_out3,,,,,
