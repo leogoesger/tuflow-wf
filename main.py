@@ -1,4 +1,6 @@
+import os
 from generate_file_structure import generate_file_structure
+
 
 generate_file_structure()
 

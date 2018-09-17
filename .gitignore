@@ -1,1 +1,16 @@
 ENV
+output_folder
+inputFiles/*.CPG
+inputFiles/*.dbf
+inputFiles/*.prj
+inputFiles/*.sbn
+inputFiles/*.shp
+inputFiles/*.sbx
+inputFiles/*.shp.xml
+inputFiles/*.shx
+inputFiles/*.csv
+inputFiles/*.rtf
+inputFiles/_prj
+inputFiles/_DS_Store
+inputFiles/*.asc
+*.pyc
