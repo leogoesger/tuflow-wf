@@ -36,11 +36,11 @@ def generate_file_structure():
               os.path.join(runs_folder, NAME + "_run_" + RUN + "_TUFLOW.bat"))
 
     # step 2.5
-    copyfile("inputFiles/" + NAME + "_boundary.prj",
+    copyfile("input_folder/" + NAME + "_boundary.prj",
              model_folder + "/gis/Project.prj")
 
-    # step 2.6
-    # filepath = "D:/path/to/batch/myBatch.bat"
+    # # step 2.6
+    # filepath = os.path.join(runs_folder, NAME + "_run_" + RUN + "_TUFLOW.bat")
     # subprocess.Popen(filepath, shell=True, stdout=subprocess.PIPE)
 
     # step 2.8

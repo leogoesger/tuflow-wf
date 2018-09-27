@@ -1,11 +1,6 @@
 import os
 from generate_file_structure import generate_file_structure
+from create_boundary import create_boundary
 
-
-generate_file_structure()
-
-
-# import subprocess
-
-# filepath="D:/path/to/batch/myBatch.bat"
-# p = subprocess.Popen(filepath, shell=True, stdout = subprocess.PIPE)
+create_boundary("vanillac4")
+# generate_file_structure()
