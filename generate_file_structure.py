@@ -39,24 +39,24 @@ def generate_file_structure():
     copyfile("input_folder/" + NAME + "_boundary.prj",
              model_folder + "/gis/Project.prj")
 
-    # # step 2.6
+    # step 2.6
     # filepath = os.path.join(runs_folder, NAME + "_run_" + RUN + "_TUFLOW.bat")
     # subprocess.Popen(filepath, shell=True, stdout=subprocess.PIPE)
 
-    # step 2.8
-    os.makedirs(model_folder + "/gis/empty")
+    # # step 2.8
+    # os.makedirs(model_folder + "/gis/empty")
 
-    # next 4 lines are to replace step 2.6 above
-    for f in file_names:
-        file_path = os.path.join(model_folder + "/gis/empty", f)
-        k = open(file_path, "w+")
-        k.close()
+    # # next 4 lines are to replace step 2.6 above
+    # for f in file_names:
+    #     file_path = os.path.join(model_folder + "/gis/empty", f)
+    #     k = open(file_path, "w+")
+    #     k.close()
 
-    for f in os.listdir(model_folder + "/gis/empty"):
-        file_path = os.path.join(model_folder + "/gis/empty", f)
-        des_path = os.path.join(
-            model_folder + "/gis", f.replace("_empty_", "_"+NAME+"_"))
-        copyfile(file_path, des_path)
+    # for f in os.listdir(model_folder + "/gis/empty"):
+    #     file_path = os.path.join(model_folder + "/gis/empty", f)
+    #     des_path = os.path.join(
+    #         model_folder + "/gis", f.replace("_empty_", "_"+NAME+"_"))
+    #     copyfile(file_path, des_path)
 
     # step 4.1, 4.2
     os.rename(runs_folder + "/Name_001.tcf",
