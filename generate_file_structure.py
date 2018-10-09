@@ -54,10 +54,23 @@ def generate_file_structure(NAME,RUN):
     p = subprocess.Popen(bat_file_path, shell=True, stdout=subprocess.PIPE)
     p.communicate()
 
+    desired_files = ["2d_code_empty_R", "2d_loc_empty_L", "2d_mat_empty_R", "2d_po_empty_L", "2d_po_empty_P"]
+
     for f in os.listdir(model_folder + "/gis/empty"):
         file_path = os.path.join(model_folder + "/gis/empty", f)
-        des_path = os.path.join(
-            model_folder + "/gis", f.replace("_empty_", "_"+NAME+"_"))
+
+        if f.split(".")[0] == '2d_sa_empty_R':
+            des_path = os.path.join(
+                model_folder + "/gis", f.replace("_empty_", "_"+NAME+"_QT_"))
+        elif f.split(".")[0] == '2d_bc_empty_L':
+            des_path = os.path.join(
+                model_folder + "/gis", f.replace("_empty_", "_"+NAME+"_HT_"))
+        elif f.split(".")[0] in desired_files:
+            des_path = os.path.join(
+                model_folder + "/gis", f.replace("_empty_", "_"+NAME+"_"))
+        else:
+            continue
+
         copyfile(file_path, des_path)
 
     iwl = raw_input("IWL(7.3) -> ") or "7.3"
