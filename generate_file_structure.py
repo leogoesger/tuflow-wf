@@ -7,17 +7,17 @@ file_names = ["2d_bc_empty_L", "2d_code_empty_R", "2d_loc_empty_L",
               "2d_mat_empty_R", "2d_po_empty_L", "2d_po_empty_P", "2d_sa_empty_R"]
 
 
-def generate_file_structure():
-    NAME = raw_input("What is the NAME for files? -> ")
-    RUN = raw_input("What is the RUN for files? -> ")
+def generate_file_structure(NAME,RUN):
+   
+   
     output_folder = os.path.abspath("output_folder/" + NAME + "_tuflow")
     bc_dbase_folder = os.path.abspath(
         "output_folder/" + NAME + "_tuflow/bc_dbase")
     model_folder = os.path.abspath("output_folder/" + NAME + "_tuflow/model")
     runs_folder = os.path.abspath("output_folder/" + NAME + "_tuflow/runs")
 
-    if os.path.isdir("output_folder"):
-        rmtree('output_folder')
+    if os.path.isdir("output_folder/" + NAME + "_tuflow"):
+        rmtree("output_folder/" + NAME + "_tuflow")
 
     # step 2.3
     copytree("template/init", output_folder)
@@ -34,16 +34,25 @@ def generate_file_structure():
               os.path.join(runs_folder, NAME + "_run_" + RUN + "_TUFLOW.bat"))
 
     # step 2.5
-    copyfile("input_folder/" + NAME + "_boundary.prj",
-             model_folder + "/gis/Project.prj")
+    copyfile("output_folder/shp_files/" + NAME + "_bound_rec.prj",
+             model_folder + "/gis/Projection.prj")
 
     # step 4.1, 4.2
     os.rename(runs_folder + "/Name_001.tcf",
               runs_folder + "/" + NAME + "_" + RUN + ".tcf")
 
-    # step 2.6
-    filepath = os.path.join(runs_folder, NAME + "_run_" + RUN + "_TUFLOW.bat")
-    subprocess.Popen(filepath, shell=True, stdout=subprocess.PIPE)
+    # edit NAME to actual name in tuflow.bat
+    bat_file_path = os.path.join(runs_folder, NAME + "_run_" + RUN + "_TUFLOW.bat")
+
+    with open(os.path.join(bat_file_path), 'r+') as myfile:
+        text = myfile.read().replace("NAME", NAME).replace("RUNN", RUN) # RUN exists in two places in bat file
+        myfile.seek(0)
+        myfile.write(text)
+        myfile.truncate()
+
+    # run tuflow sub process
+    p = subprocess.Popen(bat_file_path, shell=True, stdout=subprocess.PIPE)
+    p.communicate()
 
     for f in os.listdir(model_folder + "/gis/empty"):
         file_path = os.path.join(model_folder + "/gis/empty", f)
@@ -112,11 +121,3 @@ def generate_file_structure():
         myfile.write(text)
         myfile.truncate()
 
-    # Step 7.1
-    with open(os.path.join(runs_folder, NAME + "_run_" + RUN + "_TUFLOW.bat"), 'r+') as myfile:
-
-        text = myfile.read().replace("%RUN% \"NAME_001.tcf\" ",
-                                     "%RUN% \"" + NAME + "_" + RUN + ".tcf\"")
-        myfile.seek(0)
-        myfile.write(text)
-        myfile.truncate()

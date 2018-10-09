@@ -14,10 +14,11 @@ def create_boundary(NAME, meter):
 
     if os.path.isdir("output_folder/shp_files"):
         rmtree('output_folder/shp_files')
+        os.mkdir("output_folder/shp_files")
     else:
         os.mkdir("output_folder/shp_files")
 
-    asc_file_path = os.path.join(input_path, NAME+".asc")
+    asc_file_path = os.path.join(input_path, NAME+".tif")
     boundary = os.path.join(output_path, "{}_boundary.shp".format(NAME))
     bound_neg2m = os.path.join(
         output_path, "{}_bound_neg2m.shp".format(NAME))
