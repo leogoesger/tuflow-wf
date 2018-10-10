@@ -13,4 +13,5 @@ input_folder/*.rtf
 input_folder/_prj
 input_folder/_DS_Store
 input_folder/*.tif
+input_folder/*.asc
 *.pyc
