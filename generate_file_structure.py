@@ -11,9 +11,12 @@ def generate_file_structure(NAME, RUN):
         "output_folder/" + NAME + "_tuflow/bc_dbase")
     model_folder = os.path.abspath("output_folder/" + NAME + "_tuflow/model")
     runs_folder = os.path.abspath("output_folder/" + NAME + "_tuflow/runs")
+    check_folder = os.path.abspath("output_folder/" + NAME + "_tuflow/check/")
+    results_folder = os.path.abspath("output_folder/" + NAME + "_tuflow/results/")
 
     if os.path.isdir("output_folder/" + NAME + "_tuflow"):
         rmtree("output_folder/" + NAME + "_tuflow")
+    
 
     # step 2.3
     copytree("template/init", output_folder)
@@ -22,24 +25,28 @@ def generate_file_structure(NAME, RUN):
               os.path.join(bc_dbase_folder, "2d_bc_"+NAME+".csv"))
     os.rename(os.path.join(bc_dbase_folder, "NAME_bc_data.csv"),
               os.path.join(bc_dbase_folder, NAME+"_bc_data.csv"))
-    os.rename(os.path.join(model_folder, "NAME_001.tbc"),
+    os.rename(os.path.join(model_folder, "NAME_RUN.tbc"),
               os.path.join(model_folder, NAME + "_" + RUN + ".tbc"))
-    os.rename(os.path.join(model_folder, "NAME_001.tgc"),
+    os.rename(os.path.join(model_folder, "NAME_RUN.tgc"),
               os.path.join(model_folder, NAME + "_" + RUN + ".tgc"))
-    os.rename(os.path.join(runs_folder, "NAME_run_001_TUFLOW.bat"),
-              os.path.join(runs_folder, NAME + "_run_" + RUN + "_TUFLOW.bat"))
+    os.rename(os.path.join(runs_folder, "NAME_RUN_TUFLOW.bat"),
+              os.path.join(runs_folder, NAME + "_" + RUN + "_TUFLOW.bat"))
+    os.rename(os.path.join(check_folder, "RUN"),
+              os.path.join(check_folder, RUN))
+    os.rename(os.path.join(results_folder, "RUN"),
+              os.path.join(results_folder, RUN))
 
     # step 2.5
     copyfile("output_folder/shp_files/" + NAME + "_bound_rec.prj",
              model_folder + "/gis/Projection.prj")
 
     # step 4.1, 4.2
-    os.rename(runs_folder + "/Name_001.tcf",
+    os.rename(runs_folder + "/Name_RUN.tcf",
               runs_folder + "/" + NAME + "_" + RUN + ".tcf")
 
     # edit NAME to actual name in tuflow.bat
     bat_file_path = os.path.join(
-        runs_folder, NAME + "_run_" + RUN + "_TUFLOW.bat")
+        runs_folder, NAME + "_" + RUN + "_TUFLOW.bat")
 
     with open(os.path.join(bat_file_path), 'r+') as myfile:
         text = myfile.read().replace("NAME", NAME).replace(
@@ -82,12 +89,12 @@ def generate_file_structure(NAME, RUN):
         "Time Series Output Interval(60)  -> ") or "60"
 
     f = open(os.path.join(runs_folder, NAME + "_" + RUN + ".tcf"), "a")
-    f.write("\n! Demo Model == ON" +
+    f.write("\nDemo Model == ON" +
             "\nUnits == US Customary" +
             "\nGeometry Control File  ==  ..\\model\\" + NAME + "_" + RUN + ".tgc" +
             "\nBC Control File == ..\\model\\" + NAME + "_" + RUN + ".tbc" +
             "\nBC Database == ..\\bc_dbase\\2d_bc_" + NAME + ".csv" +
-            "\nRead Materials File == ..\\model\\" + NAME + "_materials.csv" +
+            "\nRead Materials File == ..\\model\\materials.csv" +
             "\nRead GIS PO == ..\\model\\gis\\2d_po_" + NAME + "_P.shp" +
             "\nRead GIS PO ==..\\model\\gis\\2d_po_" + NAME + "_L.shp" +
             "\nViscosity Formulation == SMAGORINSKY" +
@@ -98,8 +105,8 @@ def generate_file_structure(NAME, RUN):
             "\nEnd Time == " + end_time +
             "\nTime Step == " + timestep +
             "\nLog Folder == Log" +
-            "\nOutput Folder == ..\\results\\RUN\\" +
-            "\nWrite Check Files == ..\\check\\RUN\\" +
+            "\nOutput Folder == ..\\results\\" + Run + "\\" +
+            "\nWrite Check Files == ..\\check\\" + Run + "\\" +
             "\nMap Output Format == GRID XMDF" +
             "\nMap Output Data Types == h d n V BSS" +
             "\nStart Map Output == " + mapOutput +

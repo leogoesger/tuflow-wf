@@ -3,3 +3,4 @@ Material ID,Manning's n,Infiltration Parameters,Land Use Hazard ID,! Description
 2,0.06,,,!cobble/boulder channel
 3,0.1,,,!shrub
 4,0.3,,,!dense vegetation
+5,,,,!other

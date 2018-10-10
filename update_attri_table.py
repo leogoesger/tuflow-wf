@@ -1,8 +1,6 @@
 import arcpy
 import os
 
-field = "gridcode"
-field2 = "Id"
 arcpy.CheckOutExtension("3D")
 
 
@@ -20,7 +18,10 @@ def update_attri_table(NAME):
     code_r_fields = ["code"]
     with arcpy.da.UpdateCursor(code_R_shp, code_r_fields) as cursor:
         for index, row in enumerate(cursor):
-            row.setValue("code", 1)
+            if index == 0:
+                cursor.deleteRow()
+                continue
+            row[0] = 1
             cursor.updateRow(row)
 
     po_P_fields = ["type", "label"]
@@ -28,34 +29,43 @@ def update_attri_table(NAME):
         for index, row in enumerate(cursor):
             if index == 0:
                 cursor.deleteRow()
-            row.setValue("type", "V_" + row.getValue("type"))
-            row.setValue("label", index)
+                continue
+            row[0] = "V_" + row[0]
+            row[1] = index
+            cursor.updateRow(row)
 
     po_L_fields = ["type", "label"]
     with arcpy.da.UpdateCursor(po_L_shp, po_L_fields) as cursor:
         for index, row in enumerate(cursor):
             if index == 0:
                 cursor.deleteRow()
-            row.setValue("type", "Q_" + row.getValue("type"))
-            row.setValue("label", index)
+                continue
+            row[0] = "Q_" + row[0]
+            row[1] = index
+            cursor.updateRow(row)
 
-    loc_L_fields = ["type"]
+    loc_L_fields = ["comment"]
     with arcpy.da.UpdateCursor(loc_L_shp, loc_L_fields) as cursor:
         for index, row in enumerate(cursor):
             if index == 0:
                 cursor.deleteRow()
+                continue
 
     bc_HT_L_fields = ["type", "name"]
     with arcpy.da.UpdateCursor(bc_HT_L_shp, bc_HT_L_fields) as cursor:
         for index, row in enumerate(cursor):
             if index == 0:
                 cursor.deleteRow()
-            row.setValue("type", "HT")
-            row.setValue("name", "RPout")
+                continue
+            row[0] = "HT"
+            row[1] = "RPout"
+            cursor.updateRow(row)
 
     sa_QT_fields = ["name"]
     with arcpy.da.UpdateCursor(sa_QT_shp, sa_QT_fields) as cursor:
         for index, row in enumerate(cursor):
             if index == 0:
                 cursor.deleteRow()
-            row.setValue("name", "Rpin")
+                continue
+            row[0] = "RPin"
+            cursor.updateRow(row)
