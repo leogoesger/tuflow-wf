@@ -19,6 +19,10 @@ def generate_file_structure(NAME, run_number):
     check_folder = os.path.abspath("output_folder/" + NAME + "_tuflow/check/")
     results_folder = os.path.abspath("output_folder/" + NAME + "_tuflow/results/")
 
+    # edit NAME to actual name in tuflow.bat
+    bat_file_path = os.path.join(
+        runs_folder_init, NAME + "_TUFLOW.bat")
+
     if os.path.isdir("output_folder/" + NAME + "_tuflow"):
         rmtree("output_folder/" + NAME + "_tuflow")
     
@@ -39,6 +43,12 @@ def generate_file_structure(NAME, run_number):
               os.path.join(runs_folder_init, NAME + "_TUFLOW.bat"))
     os.rename(runs_folder_init + "/NAME.tcf",
               runs_folder_init + "/" + NAME + ".tcf")
+    
+    with open(os.path.join(bat_file_path), 'r+') as myfile:
+        text = myfile.read().replace("TUFLOW_OUTPUT_FOLDER", output_folder)
+        myfile.seek(0)
+        myfile.write(text)
+        myfile.truncate()
 
     
     for num in range(int(run_number)):
@@ -52,9 +62,7 @@ def generate_file_structure(NAME, run_number):
              model_folder + "/gis/Projection.prj")
 
 
-    # edit NAME to actual name in tuflow.bat
-    bat_file_path = os.path.join(
-        runs_folder_init, NAME + "_TUFLOW.bat")
+    
 
     with open(os.path.join(bat_file_path), 'r+') as myfile:
         text = myfile.read().replace("runs\NAME", "runs\init\\" + NAME).replace("NAME", NAME)
@@ -102,12 +110,12 @@ def generate_file_structure(NAME, run_number):
         f = open(os.path.join(runs_folder + "/" +current_run, NAME + ".tcf"), "a")
         f.write("\nDemo Model == ON" +
                 "\nUnits == US Customary" +
-                "\nGeometry Control File  ==  ..\\model\\" + NAME + ".tgc" +
-                "\nBC Control File == ..\\model\\" + NAME + "_.tbc" +
-                "\nBC Database == ..\\bc_dbase\\" + current_run +"\\2d_bc_" + NAME + ".csv" +
-                "\nRead Materials File == ..\\model\\materials.csv" +
-                "\nRead GIS PO == ..\\model\\gis\\2d_po_" + NAME + "_P.shp" +
-                "\nRead GIS PO ==..\\model\\gis\\2d_po_" + NAME + "_L.shp" +
+                "\nGeometry Control File  ==  ..\\..\\model\\" + NAME + ".tgc" +
+                "\nBC Control File == ..\\..\\model\\" + NAME + "_.tbc" +
+                "\nBC Database == ..\\..\\bc_dbase\\" + current_run +"\\2d_bc_" + NAME + ".csv" +
+                "\nRead Materials File == ..\\..\\model\\materials.csv" +
+                "\nRead GIS PO == ..\\..\\model\\gis\\2d_po_" + NAME + "_P.shp" +
+                "\nRead GIS PO ==..\\..\\model\\gis\\2d_po_" + NAME + "_L.shp" +
                 "\nViscosity Formulation == SMAGORINSKY" +
                 "\nViscosity Coefficients == 0.5, 0.005" +
                 "\nSET IWL == " + iwl +
@@ -116,8 +124,8 @@ def generate_file_structure(NAME, run_number):
                 "\nEnd Time == " + end_time +
                 "\nTime Step == " + timestep +
                 "\nLog Folder == Log" +
-                "\nOutput Folder == ..\\results\\" + current_run + "\\" +
-                "\nWrite Check Files == ..\\check\\" + current_run + "\\" +
+                "\nOutput Folder == ..\\..\\results\\" + current_run + "\\" +
+                "\nWrite Check Files == ..\\..\\check\\" + current_run + "\\" +
                 "\nMap Output Format == GRID XMDF" +
                 "\nMap Output Data Types == h d n V BSS" +
                 "\nStart Map Output == " + mapOutput +
@@ -126,25 +134,28 @@ def generate_file_structure(NAME, run_number):
                 "\nTime Series Output Interval  == " + tsOutputInterval
                 )
 
-    # # Steps 5.1, 5.2
-    # with open(os.path.join(model_folder, NAME + "_" + RUN + ".tbc"), 'r+') as myfile:
-    #     text = myfile.read().replace("NAME", NAME)
-    #     myfile.seek(0)
-    #     myfile.write(text)
-    #     myfile.truncate()
+    # Steps 5.1, 5.2
+    with open(os.path.join(model_folder, NAME + ".tbc"), 'r+') as myfile:
+        text = myfile.read().replace("NAME", NAME)
+        myfile.seek(0)
+        myfile.write(text)
+        myfile.truncate()
 
-    # with open(os.path.join(model_folder, NAME + "_" + RUN + ".tgc"), 'r+') as myfile:
+    with open(os.path.join(model_folder, NAME + ".tgc"), 'r+') as myfile:
 
-    #     cell_size = raw_input("Cell Size(3) -> ") or "3"
-    #     grid_size = raw_input("Grid Size(18247,6926)-> ") or "18247,6926"
-    #     z_pts = raw_input("Zpts(1500) -> ") or "1500"
+        print ""
+        print "Modify tgc file..."
+        print ""
+        cell_size = raw_input("Cell Size(3) -> ") or "3"
+        grid_size = raw_input("Grid Size(18247,6926)-> ") or "18247,6926"
+        z_pts = raw_input("Zpts(1500) -> ") or "1500"
 
-    #     text = myfile.read().replace("NAME", NAME)
-    #     text = text.replace("Cell Size == 3", "Cell Size == " + cell_size)
-    #     text = text.replace("Grid Size (X,Y) == 18247,6926",
-    #                         "Grid Size (X,Y) == " + grid_size)
-    #     text = text.replace("Set Zpts == 1500", "Set Zpts == " + z_pts)
+        text = myfile.read().replace("NAME", NAME)
+        text = text.replace("Cell Size == 3", "Cell Size == " + cell_size)
+        text = text.replace("Grid Size (X,Y) == 18247,6926",
+                            "Grid Size (X,Y) == " + grid_size)
+        text = text.replace("Set Zpts == 1500", "Set Zpts == " + z_pts)
 
-    #     myfile.seek(0)
-    #     myfile.write(text)
-    #     myfile.truncate()
+        myfile.seek(0)
+        myfile.write(text)
+        myfile.truncate()

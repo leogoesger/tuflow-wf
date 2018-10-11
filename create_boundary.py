@@ -12,10 +12,12 @@ def create_boundary(NAME, meter):
     input_path = os.path.abspath("input_folder")
     output_path = os.path.abspath("output_folder/shp_files")
 
-    if os.path.isdir("output_folder/shp_files"):
-        rmtree('output_folder/shp_files')
+    if os.path.isdir("output_folder/"):
+        rmtree('output_folder/')
+        os.mkdir("output_folder/")
         os.mkdir("output_folder/shp_files")
     else:
+        os.mkdir("output_folder/")
         os.mkdir("output_folder/shp_files")
 
     asc_file_path = os.path.join(input_path, NAME+".tif")
@@ -26,8 +28,7 @@ def create_boundary(NAME, meter):
 
     reclassified = arcpy.sa.Reclassify(
         asc_file_path, "VALUE", "101.102745 105.156837 1;105.156837 108.940979 1")
-    arcpy.RasterToPolygon_conversion(
-        reclassified, boundary, "NO_SIMPLIFY", "VALUE", "SINGLE_OUTER_PART", "")
+    arcpy.RasterToPolygon_conversion(reclassified, boundary, "NO_SIMPLIFY")
     arcpy.Buffer_analysis(boundary, bound_neg2m, "{} Meters".format(meter),
                           "FULL", "ROUND", "NONE", "", "PLANAR")  # require user input for meters
     arcpy.MinimumBoundingGeometry_management(

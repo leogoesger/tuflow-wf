@@ -24,7 +24,7 @@ def run_tuflow(NAME, run_number):
             myfile.truncate()
         
         with open(os.path.join(runs_folder + "/" + current_run, NAME + "_TUFLOW.bat" ), 'r+') as myfile:
-            text = myfile.read().replace("runs\\" + NAME, current_run + "\\" + NAME)
+            text = myfile.read().replace("NAME", current_run + "\\" + NAME)
             myfile.seek(0)
             myfile.write(text)
             myfile.truncate()
