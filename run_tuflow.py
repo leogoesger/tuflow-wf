@@ -32,7 +32,8 @@ def run_tuflow(NAME, run_number):
     
     
     print("")
-    print("material manning's n options")
+    print("Material manning's n options")
+    print("")
     print("1. gravel channel > 0.04")
     print("2. cobble boulder channel > 0.06 ")
     print("3. shrub > 0.01")
