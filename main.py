@@ -7,9 +7,9 @@ from run_tuflow import run_tuflow
 
 NAME = raw_input("Enter the file name -> ")
 meter = raw_input("Enter buffer distance -> ")
-RUN = raw_input("What is the RUN for files? -> ")
+run_number = raw_input("How many runs do you want for this channel type? -> ")
 
 create_boundary(NAME, meter)
-generate_file_structure(NAME,RUN)
+generate_file_structure(NAME,run_number)
 update_attri_table(NAME)
-run_tuflow(NAME, RUN)
+run_tuflow(NAME, run_number)

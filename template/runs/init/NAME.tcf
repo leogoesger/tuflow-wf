@@ -1,0 +1,3 @@
+GIS Format == SHP
+SHP projection == ..\..\model\gis\Projection.prj
+Write Empty GIS Files == ..\..\model\gis\empty | SHP

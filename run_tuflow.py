@@ -2,47 +2,34 @@ import os
 import csv
 import subprocess
 
-def run_tuflow(NAME, RUN):
+def run_tuflow(NAME, run_number):
     runs_folder = os.path.abspath("output_folder/" + NAME + "_tuflow/runs")
     model_folder = os.path.abspath("output_folder/" + NAME + "_tuflow/model")
-    bat_file_path = os.path.join(
-        runs_folder, NAME + "_" + RUN + "_TUFLOW.bat")
     bc_dbase_path=os.path.abspath("output_folder/" + NAME + "_tuflow/bc_dbase")
-    bc_2d_bc_filepath=os.path.join(bc_dbase_path,"2d_bc_" + NAME + ".csv")
-    bc_data=os.path.join(bc_dbase_path, NAME + "_bc_data.csv")
     material_file=os.path.join(model_folder,"materials.csv")
-    tgc_file=os.path.join(model_folder, NAME +"_"+ RUN + ".tgc")
+    tgc_file=os.path.join(model_folder, NAME + ".tgc")
 
-    with open(os.path.join(runs_folder, NAME + "_" + RUN + ".tcf"), 'r+') as myfile:
-        text = myfile.read().replace("Write Empty GIS Files == ..\model\gis\empty | SHP", "! Write Empty GIS Files == ..\model\gis\empty | SHP")
-        myfile.seek(0)
-        myfile.write(text)
-        myfile.truncate()
+    for i in range(int(run_number)):
+        current_run = "00" + str(i+1)
+        with open(os.path.join(runs_folder + "/" + current_run, NAME + ".tcf"), 'r+') as myfile:
+            text = myfile.read().replace("Write Empty GIS Files == ..\model\gis\empty | SHP", "! Write Empty GIS Files == ..\model\gis\empty | SHP")
+            myfile.seek(0)
+            myfile.write(text)
+            myfile.truncate()
 
-    with open(bc_2d_bc_filepath, 'r+') as myfile:
-        text = myfile.read().replace("NAME_bc_data", NAME+"_bc_data")
-        myfile.seek(0)
-        myfile.write(text)
-        myfile.truncate()
+        with open(os.path.join(bc_dbase_path + "/" + current_run, "2d_bc_" + NAME + ".csv" ), 'r+') as myfile:
+            text = myfile.read().replace("NAME_bc_data", NAME+"_bc_data")
+            myfile.seek(0)
+            myfile.write(text)
+            myfile.truncate()
+        
+        with open(os.path.join(runs_folder + "/" + current_run, NAME + "_TUFLOW.bat" ), 'r+') as myfile:
+            text = myfile.read().replace("runs\\" + NAME, current_run + "\\" + NAME)
+            myfile.seek(0)
+            myfile.write(text)
+            myfile.truncate()
+
     
-
-    is_asking_flow_parameters = True
-    bc_data_inputs = [["Time","RPin","RPout"]]
-
-    while is_asking_flow_parameters: 
-        print ""
-        timing=raw_input("what is time equal to ()? -> ")
-        RPin=raw_input("what is flow? -> ")
-        RPout=raw_input("what is the water surface elevation? -> ")
-        addition=raw_input("Do you want to add another (y/n)? -> ")
-        if addition=="n":
-            is_asking_flow_parameters=False
-        bc_data_inputs.append([timing, RPin, RPout])
-    
-    with open(bc_data, "w") as output:
-        writer = csv.writer(output, delimiter=",", lineterminator="\n")
-        for dataset in bc_data_inputs:
-            writer.writerow(dataset)
     
     print("")
     print("material manning's n options")
@@ -66,4 +53,3 @@ def run_tuflow(NAME, RUN):
         myfile.write(text)
         myfile.truncate()
 
-    # subprocess.Popen(bat_file_path, shell=True, stdout=subprocess.PIPE)
