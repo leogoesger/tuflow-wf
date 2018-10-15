@@ -9,4 +9,4 @@ Set Code == 0
 Read GIS Code == ..\model\gis\2d_code_NAME_R.SHP
 
 Set Mat == 1  ! Set every cell to a material ID of 1
-Read GIS Mat == ..\model\gis\2d_mat_NAME_R.shp  		!Set materials using polygon 
+!Read GIS Mat == ..\model\gis\2d_mat_NAME_R.shp  		!Set materials using polygon 

@@ -12,7 +12,7 @@ def run_tuflow(NAME, run_number):
     for i in range(int(run_number)):
         current_run = "00" + str(i+1)
         with open(os.path.join(runs_folder + "/" + current_run, NAME + ".tcf"), 'r+') as myfile:
-            text = myfile.read().replace("Write Empty GIS Files == ..\model\gis\empty | SHP", "! Write Empty GIS Files == ..\model\gis\empty | SHP")
+            text = myfile.read().replace("Write Empty GIS Files ", "! Write Empty GIS Files ")
             myfile.seek(0)
             myfile.write(text)
             myfile.truncate()

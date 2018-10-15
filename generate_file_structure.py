@@ -109,7 +109,7 @@ def generate_file_structure(NAME, run_number):
         current_run = "00" + str(i+1)
         f = open(os.path.join(runs_folder + "/" +current_run, NAME + ".tcf"), "a")
         f.write("\nDemo Model == ON" +
-                "\nUnits == US Customary" +
+                # "\nUnits == US Customary" +
                 "\nGeometry Control File  ==  ..\\..\\model\\" + NAME + ".tgc" +
                 "\nBC Control File == ..\\..\\model\\" + NAME + "_.tbc" +
                 "\nBC Database == ..\\..\\bc_dbase\\" + current_run +"\\2d_bc_" + NAME + ".csv" +
