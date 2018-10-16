@@ -14,4 +14,7 @@ input_folder/_prj
 input_folder/_DS_Store
 input_folder/*.tif
 input_folder/*.asc
+input_folder/*.xml
 *.pyc
+.prj
+

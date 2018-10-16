@@ -20,14 +20,15 @@ def create_boundary(NAME, meter):
         os.mkdir("output_folder/")
         os.mkdir("output_folder/shp_files")
 
-    asc_file_path = os.path.join(input_path, NAME + ".tif")
-    # prj_file_path = os.path.join(input_path, NAME + ".prj")
+    asc_file_path = os.path.join(input_path, NAME + ".asc")
+    prj_file_path = os.path.join(input_path, NAME + ".prj")
     boundary = os.path.join(output_path, "{}_boundary.shp".format(NAME))
     bound_neg2m = os.path.join(
         output_path, "{}_bound_neg2m.shp".format(NAME))
     bound_rec = os.path.join(output_path, "{}_bound_rec.shp".format(NAME))
-    # a= arcpy.DefineProjection_management(asc_file_path, prj_file_path)
-    # print a
+
+    arcpy.DefineProjection_management(asc_file_path, prj_file_path)
+
     reclassified = arcpy.sa.Reclassify(
         asc_file_path, "VALUE", "101.102745 105.156837 1;105.156837 108.940979 1")
     arcpy.RasterToPolygon_conversion(reclassified, boundary, "NO_SIMPLIFY")
