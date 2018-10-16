@@ -18,6 +18,7 @@ def generate_file_structure(NAME, run_number):
     results_folder_init = os.path.abspath("output_folder/" + NAME + "_tuflow/results/init/")
     check_folder = os.path.abspath("output_folder/" + NAME + "_tuflow/check/")
     results_folder = os.path.abspath("output_folder/" + NAME + "_tuflow/results/")
+    grid_folder = os.path.abspath("output_folder/" + NAME + "_tuflow/model/grid/") 
 
     # edit NAME to actual name in tuflow.bat
     bat_file_path = os.path.join(
@@ -29,7 +30,8 @@ def generate_file_structure(NAME, run_number):
 
     # copy everything from template folder to output folder
     copytree("template", output_folder)
-
+    copyfile("input_folder/" + NAME + ".asc", os.path.join(grid_folder, NAME + ".asc"))
+    copyfile("input_folder/" + NAME + ".prj", os.path.join(grid_folder, NAME + ".prj"))
 
     os.rename(os.path.join(bc_dbase_folder_init, "2d_bc_NAME.csv"),
               os.path.join(bc_dbase_folder_init, "2d_bc_"+NAME+".csv"))
