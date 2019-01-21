@@ -30,7 +30,7 @@ def create_boundary(NAME, meter):
     arcpy.DefineProjection_management(asc_file_path, prj_file_path)
 
     reclassified = arcpy.sa.Reclassify(
-        asc_file_path, "VALUE", "101.102745 105.156837 1;105.156837 108.940979 1")
+        asc_file_path, "VALUE", "0 10000 1") #"101.102745 105.156837 1;105.156837 108.940979 1")
     arcpy.RasterToPolygon_conversion(reclassified, boundary, "NO_SIMPLIFY")
     arcpy.Buffer_analysis(boundary, bound_neg2m, "{} Meters".format(meter),
                           "FULL", "ROUND", "NONE", "", "PLANAR")  # require user input for meters

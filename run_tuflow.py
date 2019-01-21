@@ -32,7 +32,7 @@ def run_tuflow(NAME, run_number):
     
     
     print("")
-    print("Material manning's n options")
+    print("Material manning's n options. Enter 1-4 to choose a pre-determined Manning's n or enter 5 to choose your own Manning's n")
     print("")
     print("1. gravel channel > 0.04")
     print("2. cobble boulder channel > 0.06 ")
@@ -53,4 +53,8 @@ def run_tuflow(NAME, run_number):
         myfile.seek(0)
         myfile.write(text)
         myfile.truncate()
-
+    print ""
+    print "NOTE: Running this code again will remove existing files and replace with new ones. To save files, copy the folder NAME_tuflow (within output_folder) and paste in a seperate location."    
+    print ""
+    print "REMINDER: Before running Tuflow, make sure the WSE (RPout) and flow (RPin) are added to the NAME_bc_data.csv spreadsheet located in NAME_Tuflow\ bc_dbase\RUN. This information will be different for each run."
+    print ""

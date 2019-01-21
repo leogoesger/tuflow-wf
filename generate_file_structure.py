@@ -74,7 +74,7 @@ def generate_file_structure(NAME, run_number):
 
     # run tuflow sub process
     p = subprocess.Popen(bat_file_path, shell=True, stdout=subprocess.PIPE)
-    print("\nHit Enter to continue...\n")
+    print("\nAfter empty template GIS files are created, hit Enter to continue...\n")
     p.communicate()
 
     desired_files = ["2d_code_empty_R", "2d_loc_empty_L",
@@ -97,43 +97,49 @@ def generate_file_structure(NAME, run_number):
             continue
 
         copyfile(file_path, des_path)
-
-    iwl = raw_input("IWL(7.3) -> ") or "7.3"
-    cell_depth = raw_input("Cell Wet/Dry Depth(0.1) -> ") or "0.1"
-    end_time = raw_input("End Time(2) -> ") or "2"
-    timestep = raw_input("Time Step(2.5) -> ") or "2.5"
-    mapOutput = raw_input("Start Map Output(0) -> ") or "0"
-    mapOutputInterval = raw_input("Map Output Interval(600) -> ") or "600"
+    print "STOP! Go to ArcGIS and edit GIS files in model/gis. When finished in Arc, resume by entering a value for DS water surface elevation..."
+    iwl = raw_input("Downstream water surface elevation [m] (e.g. 1003.432) -> ") #or "1003.432"
+    print ""
+    print "Values inside the parenthesis are default values. Hit enter to accept default value or update with new value by typing in value and hitting enter."
+    cell_depth = raw_input("Cell Wet/Dry Depth(0.1 m) -> ") or "0.1"
+    end_time = raw_input("End Time(2 hrs) -> ") or "2"
+    timestep = raw_input("Time Step(2.5 s) NOTE: use timestep that is 1/4 of grid size in meters -> ") or "2.5"
+    mapOutput = raw_input("Start Map Output(0 s) -> ") or "0"
+    mapOutputInterval = raw_input("Map Output Interval(600 s) -> ") or "600"
     tsOutputInterval = raw_input(
-        "Time Series Output Interval(60)  -> ") or "60"
+        "Time Series Output Interval(60 s)  -> ") or "60"
 
     for i in range(int(run_number)):
         current_run = "00" + str(i+1)
         f = open(os.path.join(runs_folder + "/" +current_run, NAME + ".tcf"), "a")
         f.write("\nDemo Model == ON" +
+                "\n" +
                 # "\nUnits == US Customary" +
                 "\nGeometry Control File  ==  ..\\..\\model\\" + NAME + ".tgc" +
-                "\nBC Control File == ..\\..\\model\\" + NAME + "_.tbc" +
+                "\nBC Control File == ..\\..\\model\\" + NAME + ".tbc" +
                 "\nBC Database == ..\\..\\bc_dbase\\" + current_run +"\\2d_bc_" + NAME + ".csv" +
-                "\nRead Materials File == ..\\..\\model\\materials.csv" +
-                "\nRead GIS PO == ..\\..\\model\\gis\\2d_po_" + NAME + "_P.shp" +
-                "\nRead GIS PO ==..\\..\\model\\gis\\2d_po_" + NAME + "_L.shp" +
+                "\nRead Materials File == ..\\..\\model\\materials.csv" + "     ! This provides the link between the material ID defined in the .tgc and the Manning's roughess" +
+                "\nRead GIS PO == ..\\..\\model\\gis\\2d_po_" + NAME + "_P.shp" + "     ! velocity monitoring point locations" +
+                "\nRead GIS PO == ..\\..\\model\\gis\\2d_po_" + NAME + "_L.shp" + "     ! flow monitoring xs lines" +
+                "\n" +
                 "\nViscosity Formulation == SMAGORINSKY" +
                 "\nViscosity Coefficients == 0.5, 0.005" +
-                "\nSET IWL == " + iwl +
-                "\nCell Wet/Dry Depth == " + cell_depth +
-                "\nStart Time == 0" +
-                "\nEnd Time == " + end_time +
-                "\nTime Step == " + timestep +
-                "\nLog Folder == Log" +
-                "\nOutput Folder == ..\\..\\results\\" + current_run + "\\" +
-                "\nWrite Check Files == ..\\..\\check\\" + current_run + "\\" +
-                "\nMap Output Format == GRID XMDF" +
-                "\nMap Output Data Types == h d n V BSS" +
-                "\nStart Map Output == " + mapOutput +
-                "\nMap Output Interval == " + mapOutputInterval +
+                "\nSET IWL == " + iwl + "   ! matches the downstream WSE" +
+                "\nCell Wet/Dry Depth == " + cell_depth + "     ! Forces cells to be dry if their depth is < 0.1 m" +
+                "\n" +
+                "\nStart Time == 0" + "     ! Start Simulation at 0 hours" +
+                "\nEnd Time == " + end_time + "     ! End Simulation (hrs)" +
+                "\nTimestep == " + timestep + "     ! Use a 2D time step that is ~1/4 of the grid size in m (10 m * 0.25 -> 2.5 s)" +
+                "\n" +
+                "\nLog Folder == Log" + "   ! Redirects log output (eg. .tlf and _messages GIS layers to the folder log" +
+                "\nOutput Folder == ..\\..\\results\\" + current_run + "\\" + "     ! Redirects results files to TUFLOW\Results\RUN" +
+                "\nWrite Check Files == ..\\..\\check\\" + current_run + "\\" + "   ! Specifies check files to be written to TUFLOW\check\RUN" +
+                "\nMap Output Format == GRID XMDF" + "  ! Output directly to GIS (grid) as well as SMS (xmdf compact) format" +
+                "\nMap Output Data Types == h d n V BSS" + "    ! wse depth Manning's n velocity bed shear stress" +
+                "\nStart Map Output == " + mapOutput + "    ! Start map output at 0 hours" +
+                "\nMap Output Interval == " + mapOutputInterval + "     ! Output every 600 seconds (10 minutes)" +
                 "\nGRID Map Output Data Types == h d n V BSS" +
-                "\nTime Series Output Interval  == " + tsOutputInterval
+                "\nTime Series Output Interval  == " + tsOutputInterval + "     ! time interval of output in seconds"
                 )
 
     # Steps 5.1, 5.2
@@ -146,17 +152,17 @@ def generate_file_structure(NAME, run_number):
     with open(os.path.join(model_folder, NAME + ".tgc"), 'r+') as myfile:
 
         print ""
-        print "Modify tgc file..."
+        print "If you haven't done so already, use the measure tool in ArcGIS to obtain the x,y dimension (m) of the code area polygon..."
         print ""
-        cell_size = raw_input("Cell Size(3) -> ") or "3"
-        grid_size = raw_input("Grid Size(18247,6926)-> ") or "18247,6926"
-        z_pts = raw_input("Zpts(1500) -> ") or "1500"
+        cell_size = raw_input("Cell Size of code area polygon(10 m)-> ") or "10"
+        grid_size = raw_input("Grid Size [m] (x,y dimension of the code area polygon rounded to be divisible by the cell size, e.g. 770,150)-> ") #or "770,150"
+        z_pts = raw_input("Zpts(10000 m) (any elevation notably higher than project max z) -> ") or "10000"
 
         text = myfile.read().replace("NAME", NAME)
-        text = text.replace("Cell Size == 3", "Cell Size == " + cell_size)
-        text = text.replace("Grid Size (X,Y) == 18247,6926",
-                            "Grid Size (X,Y) == " + grid_size)
-        text = text.replace("Set Zpts == 1500", "Set Zpts == " + z_pts)
+        text = text.replace("Cell Size == 10", "Cell Size == " + cell_size)
+        text = text.replace("Grid Size (X,Y) == ", #770,150",
+                            "Grid Size (X,Y) == " + grid_size)                    
+        text = text.replace("Set Zpts == 10000", "Set Zpts == " + z_pts)
 
         myfile.seek(0)
         myfile.write(text)
